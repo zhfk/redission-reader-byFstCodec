@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="connect">
+    <div class="container">
+        <form id="connect-status" th:if="${connected}" th:action="@{/disconnect}" method="post">
+            <span>status:connected succeed ^_^</span>
+            <button id="disconnect" type="submit">断开连接</button>
+        </form>
+        <div th:unless="${connected}">
+            <div>status: connected failed (0_0)</div>
+        </div>
+    </div>
+    <div class="container">
+        <form id="redis-query-form" th:if="${connected}" th:action="@{/query}" method="post">
+            <label>
+                key: <input id="redis-key" type="text" name="key" required>
+            </label>
+            <button id="query" type="submit">query</button>
+            <button id="clear" type="reset">clear</button>
+        </form>
+    </div>
+    <div id="meta">
+        <p th:text="'key [ '+${key}+' ]'"></p>
+        <p th:text="'type [ '+${valueType}+' ]'"></p>
+        values:
+    </div>
+    <div th:if="${querySucceed}">
+        <ol>
+            <li th:each="value:${values}">
+                <div>
+                    <span>&nbsp;&nbsp;</span></span> <span th:text="${value}"></span>
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>
+</body>
+</html>
+
+<style>
+    #meta {
+        margin-left: 10px;
+    }
+    #disconnect {
+        width: 100px;
+        background-color: #bd3d43;
+        padding: 5px 5px;margin:5px 20px;
+    }
+    #redis-key {
+        width: 300px;
+    }
+    .container {padding: 10px;margin:10px auto;}
+    * {font-family: Microsoft YaHei, Tahoma, Helvetica, Arial, sans-serif;}
+</style>

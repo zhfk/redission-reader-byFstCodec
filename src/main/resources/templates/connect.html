@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div>
+        <fieldset id="fieldset">
+            <legend>Redission Client Codec By FstCodec</legend>
+            <form id="client-form" action="#" th:action="@{/connect}" th:object="${myRedisClient}" method="post">
+                <label>
+                    host: <input id="redis-host" type="text" name="host" required>
+                </label>
+                <label>
+                    port: <input id="redis-port" type="number" name="port" value="6379">
+                </label>
+                <label>
+                    db: <input id="redis-db" type="number" name="db" value="3">
+                </label>
+                <label>
+                    pass: <input id="redis-pass" type="password" name="pass">
+                </label>
+                <label>
+                    <button id="btn-connect" type="submit">connect</button>
+                </label>
+            </form>
+        </fieldset>
+    </div>
+</body>
+</html>
+
+<style>
+
+    #fieldset{
+        padding: 15px 15px;
+        margin: 15px 15px;
+    }
+    #btn-connect {
+        background-color: #34ce57;
+        width: 100px;
+    }
+    * {font-family: Tahoma, Microsoft YaHei, Helvetica, Arial, sans-serif;}
+</style>
