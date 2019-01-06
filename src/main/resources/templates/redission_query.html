@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/layui/layui.css}">
+    <title>Title</title>
+</head>
+<body>
+<div th:include="index_nav :: navigators"></div>
+    <fieldset class="layui-elem-field">
+        <legend>连接状态</legend>
+        <form class="layui-form" th:if="${connected}" th:action="@{/redission/disconnect}" method="post">
+            <div class="layui-form-item">
+                <div class="layui-form-mid layui-word-aux">Connected Succeed ^_^</div>
+                <div class="layui-input-inline">
+                    <button class="layui-btn layui-btn-warm layui-btn-sm" type="submit">断开连接</button>
+                </div>
+            </div>
+        </form>
+        <div th:unless="${connected}">
+            <div class="layui-form-mid layui-word-aux">Connected failed (0_0)</div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field">
+        <legend>查询</legend>
+        <form class="layui-form" th:if="${connected}" th:action="@{/redission/query}" method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">key: </label>
+                <div class="layui-input-block">
+                    <input type="text" name="key" required  lay-verify="required" placeholder="请输入 redis key" autocomplete="on" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button class="layui-btn" type="submit">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+    <fieldset class="layui-elem-field">
+        <legend>查询结果</legend>
+        <div class="layui-form-item">
+            <label class="layui-form-label">key: </label>
+            <div class="layui-input-block">
+                    <div class="layui-form-mid layui-word-aux" th:text="${key}"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">type: </label>
+            <div class="layui-input-block">
+                <div class="layui-form-mid layui-word-aux" th:text="${valueType}"></div>
+            </div>
+        </div>
+        <div class="layui-form-item" th:if="${querySucceed}">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>值</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr id="r-values" th:each="value:${values}" >
+                    <td lay-data="{field:'value',sort: true}" th:text="${value}"></td>
+                    <td lay-data="{field:'value',sort: true}" th:text="${value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </fieldset>
+</body>
+<script th:src="@{/layui/layui.all.js}"></script>
+<script>
+    ;!function(){
+        var element = layui.element,
+            $ = layui.$;
+        $(function(){
+            var len = $('table tr').length;
+            for(var i = 1;i<len;i++){
+                $('table tr:eq('+i+') td:first').text(i);
+            }
+        });
+
+    }();
+</script>
+</html>

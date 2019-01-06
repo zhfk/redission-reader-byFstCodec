@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <div th:fragment="header">
+            <p id="header">welcome budy</p>
+        </div>
+        <div th:fragment="content(var1,var2)">
+            <p th:text="${var1}+'-'+${var2}"></p>
+        </div>
+        <div th:fragment="footer">
+            This is a footer
+        </div>
+        <div th:fragment="copy">
+            &copy; 2011 The Good Thymes Virtual Grocery
+        </div>
+
+    </div>
+</body>
+</html>

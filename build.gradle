@@ -28,6 +28,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     compile('org.springframework.boot:spring-boot-starter-web')
+    compile('com.alibaba:fastjson:1.2.54')
     compile('org.redisson:redisson:3.4.4')
     compile('de.ruedigermoeller:fst:2.51')
     compileOnly('org.projectlombok:lombok')

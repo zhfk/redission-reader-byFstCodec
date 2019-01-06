@@ -3,9 +3,7 @@ package com.zhfk.redissionreader.controller;
 import com.zhfk.redissionreader.module.MyRedisClient;
 import com.zhfk.redissionreader.service.RedisService;
 import lombok.extern.log4j.Log4j2;
-import org.redisson.api.RKeys;
-import org.redisson.api.RType;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,41 +11,50 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 @Log4j2
 @Controller
-public class IndexController {
+@RequestMapping("/redission")
+public class redissionController {
 
     RedissonClient redissonClient = null;
 
     @Autowired
     RedisService redisService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping("/client")
     public String index(Model model) {
         if(redissonClient == null || redissonClient.isShutdown()){
             model.addAttribute("myRedisClient", new MyRedisClient());
         }
-        return "connect";
+        return "redission_connect";
     }
 
-//    @RequestMapping(value = "/save", method = RequestMethod.GET)
-//    public void save(){
-//       RSet<Object> sc = redissonClient.getSet("zhfk:test:set");
-//       sc.addAll(Arrays.asList("S1","S2","S4","S6","S29","S13"));
-//
-//       RList<Object> lc = redissonClient.getList("zhfk:test:list");
-//       lc.addAll(Arrays.asList("S1","S2","S4","S6","S29","S13"));
-//
-//       RMap<String, Object> mc = redissonClient.getMap("zhfk:test:map");
-//       Map<String, Integer> m1 = new HashMap<>();
-//       m1.put("k1", 1);
-//       m1.put("k2", 2);
-//       m1.put("k30", 30);
-//       m1.put("k300", 300);
-//       mc.putAll(m1);
-//
-//       log.info("save objs succeed!");
-//    }
+    @RequestMapping(value = "/save", method = RequestMethod.GET)
+    public String save(Model model){
+       RSet<Object> sc = redissonClient.getSet("zhfk:test:set");
+       sc.clear();
+       sc.addAll(Arrays.asList("S1","S2","S4","S6","S29","S13"));
+
+       RList<Object> lc = redissonClient.getList("zhfk:test:list");
+       lc.clear();
+       lc.addAll(Arrays.asList("S1","S2","S4","S6","S29","S13"));
+
+       RMap<String, Object> mc = redissonClient.getMap("zhfk:test:map");
+       mc.clear();
+       Map<String, Integer> m1 = new HashMap<>();
+        for (int i = 0; i < 100; i++) {
+            m1.put("k"+i, i);
+        }
+       mc.putAll(m1);
+
+       log.info("save objs succeed!");
+        model.addAttribute("connected",true);
+       return "redission_query";
+    }
 
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     public String connect(@ModelAttribute(value = "myRedisClient") MyRedisClient redisClient, Model model) {
@@ -61,8 +68,6 @@ public class IndexController {
                             redisClient.getHost(),
                             redisClient.getPort(),
                             redisClient.getDb()));
-            RKeys keys = redissonClient.getKeys();
-            model.addAttribute("redisKeys", keys.getKeys());
             model.addAttribute("connected",true);
         } else {
             //连接成功
@@ -73,7 +78,7 @@ public class IndexController {
                             redisClient.getDb()));
             model.addAttribute("connected",false);
         }
-        return "query";
+        return "redission_query";
     }
 
     @RequestMapping(value = "/query", method = RequestMethod.POST)
@@ -86,7 +91,7 @@ public class IndexController {
         String type = "key not found!";
         if(keyType == null) {
             model.addAttribute("valueType", type);
-            return "query";
+            return "redission_query";
         }
         switch (keyType){
             case SET:
@@ -115,21 +120,14 @@ public class IndexController {
         }
         model.addAttribute("querySucceed",true);
         model.addAttribute("valueType", type);
-        return "query";
+        return "redission_query";
     }
-
-//    @RequestMapping(value = "/keys", method = RequestMethod.GET)
-//    public String searchKeys(String keyPattern,Model model){
-//        Iterable<String> keys = redissonClient.getKeys().getKeysByPattern(keyPattern);
-//        model.addAttribute("keys",keys);
-//        return "keys";
-//    }
 
     @RequestMapping(value = "/disconnect",method = RequestMethod.POST)
     public String disconnect(Model model){
         redissonClient.shutdown();
         model.addAttribute("shutdown",true);
         log.info("rediss disconnect succeed!");
-        return "connect";
+        return "redission_connect";
     }
 }

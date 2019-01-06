@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" th:href="@{/layui/layui.css}">
+    <title>redissonPage</title>
+</head>
+<body>
+    <div th:include="index_nav :: navigators"></div>
+    <div>
+        <fieldset class="layui-elem-field">
+            <legend>连接信息</legend>
+            <div  class="layui-field-box">
+            <form class="layui-form" action="#" th:action="@{/redission/connect}" th:object="${myRedisClient}" method="post">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">IP地址</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="host" required  lay-verify="required" placeholder="请输入IP地址" autocomplete="off" class="layui-input" value="localhost">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">端口号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="port" required  lay-verify="required" placeholder="请输入端口号" autocomplete="off" class="layui-input" value="6379">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据库</label>
+                    <div class="layui-input-inline">
+                        <select name="db" lay-verify="required">
+                            <div th:each="db:${#numbers.sequence(0,63,1)}">
+                                <option th:text="${db}" th:if="${db} eq 3" th:attr="selected='selected'"></option>
+                                <option th:text="${db}" th:unless="${db} eq 3"></option>
+                            </div>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码框</label>
+                    <div class="layui-input-inline">
+                        <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </fieldset>
+    </div>
+</body>
+    <script th:src="@{/layui/layui.all.js}"></script>
+    <script>
+        ;!function(){
+            var element = layui.element;
+        }();
+    </script>
+</html>
