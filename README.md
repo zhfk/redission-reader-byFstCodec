@@ -15,4 +15,5 @@ redsssion 读取 redis，序列化库为FstCodec
  - gradle bootJar
  - java -jar build/libs/redission-reader-0.0.1-SNAPSHOT.jar
 
-# 访问 localhost:8080 
+# 访问 
+  localhost:8080 
