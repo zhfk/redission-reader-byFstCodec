@@ -1,7 +1,3 @@
-# docker login docker-registry.bigdata.ytx.com:5000
-# docker build -t docker-registry.bigdata.ytx.com:5000/bigdata/redission-reader:1.0 .
-# docker push docker-registry.bigdata.ytx.com:5000/bigdata/redission-reader:1.0
-
 FROM frekele/gradle
 
 MAINTAINER Zhang Hefeng <hefeng.zhang@yintech.cn>
