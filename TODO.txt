@@ -2,4 +2,5 @@
 利用框架layui对页面进行美化
 TODO：
     redission 序列化的选择
-    redis 查询结果分页
+    redis 查询结果分页优化
+    支持复杂类型的数据结构

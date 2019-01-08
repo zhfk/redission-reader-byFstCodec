@@ -1,6 +1,7 @@
 body {
-    background: url(img/bg4.jpeg) 0 0 no-repeat; background-size: 100%;
-    -webkit-perspective: 600px;
+    /*background: url(img/bg4.jpeg) 0 0 no-repeat;*/
+    background-size: 100%;
+    -webkit-perspective: 800px;
 }
 .box{
     width:200px;
