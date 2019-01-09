@@ -8,12 +8,12 @@
 </head>
 <body>
     <div th:include="index_nav :: navigators"></div>
-    <div class="layui-row" style="margin-top: 10px">
+    <div class="layui-row">
         <div class="layui-col-md6">
         <fieldset class="layui-elem-field">
             <legend>连接信息</legend>
             <div  class="layui-field-box">
-            <form class="layui-form" lay-filter="connect-info-from" style="margin: 16px 0px">
+            <form class="layui-form" lay-filter="connect-info-from" style="margin-top: 12px">
                 <div class="layui-form-item">
                     <label class="layui-form-label">IP地址</label>
                     <div class="layui-input-inline">
@@ -34,16 +34,31 @@
                             </div>
                         </select>
                     </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">序列化</label>
+                        <div class="layui-input-inline">
+                            <select name="codec" class="connect-info">
+                                <option value="FstCodec" selected>FstCodec</option>
+                                <optgroup label="暂未实现">
+                                    <option value="JsonJacksonCodec">JsonJacksonCodec</option>
+                                    <option value="KryoCodec">KryoCodec</option>
+                                    <option value="SerializationCodec">SerializationCodec</option>
+                                    <option value="SnappyCodec">SnappyCodec</option>
+                                    <option value="StringCodec">StringCodec</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">密码框</label>
                     <div class="layui-input-inline">
                         <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input connect-info">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                </div>
-                <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button id="connect-info-reset" type="reset" class="layui-btn layui-btn-primary connect-info">重置</button>
+                        <button id="connect-info-reset" type="reset" class="layui-btn layui-btn-primary connect-info" style="margin-left: 123px">重置</button>
                         <button id="connect-info-submit" class="layui-btn connect-info" lay-submit lay-filter="connect-info-submit">立即提交</button>
                     </div>
                 </div>
@@ -69,7 +84,31 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">key: </label>
                     <div class="layui-input-block">
-                        <input type="text" name="key" required  lay-verify="required" placeholder="请输入 redis key" autocomplete="on" class="layui-input query-info" disabled>
+                        <input id="query-info-key" type="text" name="key" required  lay-verify="required" placeholder="请输入 redis key" autocomplete="on" class="layui-input query-info" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">type: </label>
+                    <div class="layui-input-inline">
+                        <select id="query-info-type" name="type" required class="query-info" disabled>
+                            <option value="">请选择类型</option>
+                            <optgroup label="分布式集合">
+                                <option value="RMap">RMap</option>
+                                <option value="RSet">RSet</option>
+                                <option value="RList">RList</option>
+                                <option value="RSortedSet">RSortedSet</option>
+                                <option value="RScoredSortedSet">RScoredSortedSet</option>
+                                <option value="RLexSortedSet">RLexSortedSet</option>
+                                <option value="RSetMultimap">RSetMultimap</option>
+                                <option value="RListMultimap">RListMultimap</option>
+                            </optgroup>
+                            <optgroup label="分布式对象">
+                                <option value="RBloomFilter">RBloomFilter</option>
+                                <option value="RBitSet">RBitSet</option>
+                                <option value="RBucket">RBucket</option>
+                                <option value="RGeo">RGeo</option>
+                            </optgroup>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -81,25 +120,10 @@
             </form>
         </fieldset>
         </div>
-        <div class="layui-col-md12">
         <fieldset class="layui-elem-field">
             <legend>查询结果</legend>
-            <div class="layui-form-item">
-                <label class="layui-form-label">key: </label>
-                <div class="layui-input-block">
-                    <input id="query-result-key" type="text" class="layui-input" disabled>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">type: </label>
-                <div class="layui-input-inline">
-                    <input id="query-result-type" type="text" class="layui-input" disabled>
-                </div>
-            </div>
-            <table id="query-result-data" class="layui-table" lay-even lay-skin="nob">
-            </table>
+            <table id="query-result-data" class="layui-table" lay-even lay-skin="nob"></table>
         </fieldset>
-        </div>
     </div>
 </body>
     <script th:src="@{/layui-v2.4.5/layui.all.js}"></script>
@@ -158,8 +182,6 @@
                     contentType: "application/json; charset=utf-8",
                     success:function(res){
                         if(res.code===200){
-                            $('#query-result-key').attr("value", res.data.key);
-                            $('#query-result-type').attr("value", res.data.type);
                             active(res.data.key, res.data.type)
                         }else{
                             layer.alert(res.msg,{
@@ -231,8 +253,9 @@
                 page: true,
                 title: "查询结果",
                 cols: [[
-                    {field: 'key', title: '序号', sort: true},
-                    {field: 'value', title: 'value', sort: true}
+                    {field: 'index', title: 'index', sort: true},
+                    {field: 'value', title: 'value'},
+                    {field: 'score', title: 'score', sort: true}
                 ]]
             });
         }();

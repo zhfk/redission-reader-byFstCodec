@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MyKeyValue {
-    private String key;
+    private int index;
     private String value;
+    private Double score;
 }

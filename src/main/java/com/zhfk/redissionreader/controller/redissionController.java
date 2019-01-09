@@ -1,20 +1,18 @@
 package com.zhfk.redissionreader.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zhfk.redissionreader.constant.Codecs;
 import com.zhfk.redissionreader.module.MyKeyValue;
 import com.zhfk.redissionreader.module.MyRedisClient;
 import com.zhfk.redissionreader.module.ResponseData;
 import com.zhfk.redissionreader.service.RedisService;
 import lombok.extern.log4j.Log4j2;
-import org.redisson.api.RType;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -31,6 +29,15 @@ public class redissionController {
     public String client() {
         return "redission_client";
     }
+
+
+    @RequestMapping(value = "/codecs", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseData getCodecs(){
+        List<String> codecs = Arrays.stream(Codecs.values()).map(e -> e.name).collect(Collectors.toList());
+        return new ResponseData<>(200, "succeed", 0, codecs);
+    }
+
 
 //    @RequestMapping(value = "/save", method = RequestMethod.GET)
 //    public String save(Model model){
@@ -65,6 +72,12 @@ public class redissionController {
 //       return "redission_query";
 //    }
 
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseData connect(@RequestBody JSONObject object) {
+        return new ResponseData<>(200, "succeed", 0, object);
+    }
+
     @RequestMapping(value = "/connect", method = RequestMethod.POST)
     @ResponseBody
     public ResponseData connect(@RequestBody MyRedisClient redisClient) {
@@ -79,23 +92,6 @@ public class redissionController {
         }
     }
 
-    @RequestMapping(value = "/query", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseData query(@RequestBody JSONObject param){
-        String key = param.getString("key");
-        RType keyType = redissonClient.getKeys().getType(key);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("key", key);
-        String type = "key not found!";
-        if (keyType == null) {
-            jsonObject.put("type", type);
-            return new ResponseData<>(200, type, 0, jsonObject);
-        } else {
-            jsonObject.put("type", keyType.name());
-            return new ResponseData<>(200, "succeed", 0, jsonObject);
-        }
-    }
-
     @RequestMapping(value = "/data")
     @ResponseBody
     public ResponseData getData(
@@ -104,32 +100,61 @@ public class redissionController {
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "limit") Integer limit){
         JSONObject jsonObject = new JSONObject();
+        int count = 0;
+        int index = 0;
+        List<MyKeyValue> data = new ArrayList<>();
         switch (type){
-            case "SET":
-                jsonObject.put("values", redissonClient.getSet(key).readAll());
+            case "RSet":
+                RSet<Object> rSet = redissonClient.getSet(key);
+                count = rSet.size();
+                Set<Object> rSetObjs = rSet.readAll();
+                for (Object o:rSetObjs){
+                    data.add(new MyKeyValue(index++,o.toString(),null));
+                }
                 break;
-            case "LIST":
-                jsonObject.put("values", redissonClient.getList(key).readAll());
+            case "RList":
+                RList<Object> rList = redissonClient.getList(key);
+                count = rList.size();
+                List<Object> rListObjs = rList.readAll();
+                for (Object o:rListObjs){
+                    data.add(new MyKeyValue(index++,o.toString(),null));
+                }
                 break;
-            case "MAP":
-                jsonObject.put("values", redissonClient.getMap(key).readAllEntrySet());
+            case "RMap":
+                RMap<Object, Object> rMap = redissonClient.getMap(key);
+                count = rMap.size();
+                Set<Map.Entry<Object, Object>> enties = rMap.readAllEntrySet();
+                for (Map.Entry e: enties){
+                    data.add(new MyKeyValue(index++, e.toString(), null));
+                }
                 break;
-            case "ZSET":
-                jsonObject.put("values", redissonClient.getSortedSet(key).readAll());
+            case "RSortedSet":
+                RSortedSet<Object> rSortedSet = redissonClient.getSortedSet(key);
+                count = rSortedSet.size();
+                Collection<Object> rSortedSetObjs = rSortedSet.readAll();
+
+                for (Object o:rSortedSetObjs){
+                    data.add(new MyKeyValue(index++, o.toString(), null));
+                }
                 break;
-            case "OBJECT":
-                jsonObject.put("values", Collections.singletonList(redissonClient.getBucket(key).get()));
+            case "RScoredSortedSet":
+                RScoredSortedSet<Object> rScoredSortedSet = redissonClient.getScoredSortedSet(key);
+                count = rScoredSortedSet.size();
+                Object[] rScoredSortedSetObjs = rScoredSortedSet.readAll().toArray();
+
+                for (int i = 0; i < rScoredSortedSetObjs.length; i++) {
+                    data.add(
+                            new MyKeyValue(i,
+                                    rScoredSortedSetObjs[i].toString(),
+                                    rScoredSortedSet.getScore(rScoredSortedSetObjs[i])
+                            )
+                    );
+                }
                 break;
             default:
-                jsonObject.put("values",Collections.emptyList());
-                log.info("unsupport object");
+                log.info("type for "+type+" not support yet!");
         }
-        Collection<Object> values = (Collection<Object>) jsonObject.get("values");
-        List<MyKeyValue> data = values.stream().map(i -> new MyKeyValue("key", i.toString())).collect(Collectors.toList());
-
         Integer beforeNum = (page - 1) * limit;
-        int count = data.size();
-
         return new ResponseData<>(0, "succeed", data.size(), data.subList(beforeNum, Integer.min(beforeNum+limit, count)));
     }
 
