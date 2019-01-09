@@ -17,3 +17,15 @@ redsssion 读取 redis，序列化库为FstCodec
 
 # 访问 
   localhost:8080 
+  
+
+# TODO：
+    redission 序列化的选择
+    redis 查询结果分页优化
+    支持复杂类型的数据结构
+# 更新历史
+### 2019-01-07
+    - 利用框架layui对页面进行美化
+### 2019-01-09
+    - 添加完整的layui库依赖
+    - 更新查询redis逻辑页面, 按钮状态更新
