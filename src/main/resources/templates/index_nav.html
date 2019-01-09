@@ -3,11 +3,12 @@
         <li class="layui-nav-item"><a th:href="@{/}">首页</a></li>
         <li class="layui-nav-item"><a th:href="@{/redission/client}">RedissionClient</a></li>
         <li class="layui-nav-item"><a th:href="@{/user/list}">UserClient</a></li>
-        <li class="layui-nav-item" lay-filter="personInfo">
+        <li class="layui-nav-item" id="personInfo" onclick="alert('点我干嘛？')">
             <a href="">个人中心</a>
         </li>
-        <li class="layui-nav-item" lay-filter="about">
+        <li class="layui-nav-item" id="about" onclick="alert('Edited by zhfk!')">
             <a href="">关于</a>
         </li>
     </ul>
 </div>
+

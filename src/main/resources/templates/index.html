@@ -26,17 +26,8 @@
     <script>
         ;!function(){
             var element = layui.element;
-            var layer = layui.layer;
-            element.on('nav(personInfo)', function(nav){
-                layer.msg('暂未开放！',{
-                    'title': nav.innerText
-                })
-            });
-            element.on('nav(about)', function(nav){
-                layer.msg('Editor by zhfk',{
-                    'title': nav.innerText
-                })
-            });
+            var layer = layui.layer,
+                $ = layui.$;
         }();
     </script>
 </html>

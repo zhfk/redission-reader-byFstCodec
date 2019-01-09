@@ -102,60 +102,66 @@ public class redissionController {
         JSONObject jsonObject = new JSONObject();
         int count = 0;
         int index = 0;
+        String message = "Query succeed";
         List<MyKeyValue> data = new ArrayList<>();
-        switch (type){
-            case "RSet":
-                RSet<Object> rSet = redissonClient.getSet(key);
-                count = rSet.size();
-                Set<Object> rSetObjs = rSet.readAll();
-                for (Object o:rSetObjs){
-                    data.add(new MyKeyValue(index++,o.toString(),null));
-                }
-                break;
-            case "RList":
-                RList<Object> rList = redissonClient.getList(key);
-                count = rList.size();
-                List<Object> rListObjs = rList.readAll();
-                for (Object o:rListObjs){
-                    data.add(new MyKeyValue(index++,o.toString(),null));
-                }
-                break;
-            case "RMap":
-                RMap<Object, Object> rMap = redissonClient.getMap(key);
-                count = rMap.size();
-                Set<Map.Entry<Object, Object>> enties = rMap.readAllEntrySet();
-                for (Map.Entry e: enties){
-                    data.add(new MyKeyValue(index++, e.toString(), null));
-                }
-                break;
-            case "RSortedSet":
-                RSortedSet<Object> rSortedSet = redissonClient.getSortedSet(key);
-                count = rSortedSet.size();
-                Collection<Object> rSortedSetObjs = rSortedSet.readAll();
+        try {
+            switch (type) {
+                case "RSet":
+                    RSet<Object> rSet = redissonClient.getSet(key);
+                    count = rSet.size();
+                    Set<Object> rSetObjs = rSet.readAll();
+                    for (Object o : rSetObjs) {
+                        data.add(new MyKeyValue(index++, o.toString(), null));
+                    }
+                    break;
+                case "RList":
+                    RList<Object> rList = redissonClient.getList(key);
+                    count = rList.size();
+                    List<Object> rListObjs = rList.readAll();
+                    for (Object o : rListObjs) {
+                        data.add(new MyKeyValue(index++, o.toString(), null));
+                    }
+                    break;
+                case "RMap":
+                    RMap<Object, Object> rMap = redissonClient.getMap(key);
+                    count = rMap.size();
+                    Set<Map.Entry<Object, Object>> enties = rMap.readAllEntrySet();
+                    for (Map.Entry e : enties) {
+                        data.add(new MyKeyValue(index++, e.toString(), null));
+                    }
+                    break;
+                case "RSortedSet":
+                    RSortedSet<Object> rSortedSet = redissonClient.getSortedSet(key);
+                    count = rSortedSet.size();
+                    Collection<Object> rSortedSetObjs = rSortedSet.readAll();
 
-                for (Object o:rSortedSetObjs){
-                    data.add(new MyKeyValue(index++, o.toString(), null));
-                }
-                break;
-            case "RScoredSortedSet":
-                RScoredSortedSet<Object> rScoredSortedSet = redissonClient.getScoredSortedSet(key);
-                count = rScoredSortedSet.size();
-                Object[] rScoredSortedSetObjs = rScoredSortedSet.readAll().toArray();
+                    for (Object o : rSortedSetObjs) {
+                        data.add(new MyKeyValue(index++, o.toString(), null));
+                    }
+                    break;
+                case "RScoredSortedSet":
+                    RScoredSortedSet<Object> rScoredSortedSet = redissonClient.getScoredSortedSet(key);
+                    count = rScoredSortedSet.size();
+                    Object[] rScoredSortedSetObjs = rScoredSortedSet.readAll().toArray();
 
-                for (int i = 0; i < rScoredSortedSetObjs.length; i++) {
-                    data.add(
-                            new MyKeyValue(i,
-                                    rScoredSortedSetObjs[i].toString(),
-                                    rScoredSortedSet.getScore(rScoredSortedSetObjs[i])
-                            )
-                    );
-                }
-                break;
-            default:
-                log.info("type for "+type+" not support yet!");
+                    for (int i = 0; i < rScoredSortedSetObjs.length; i++) {
+                        data.add(
+                                new MyKeyValue(i,
+                                        rScoredSortedSetObjs[i].toString(),
+                                        rScoredSortedSet.getScore(rScoredSortedSetObjs[i])
+                                )
+                        );
+                    }
+                    break;
+                default:
+                    message = "你难道不知道类型选错了吗？";
+                    log.info("type for " + type + " not support yet!");
+            }
+        }catch (Exception e){
+            message = "你难道不知道类型选错了吗？";
         }
         Integer beforeNum = (page - 1) * limit;
-        return new ResponseData<>(0, "succeed", data.size(), data.subList(beforeNum, Integer.min(beforeNum+limit, count)));
+        return new ResponseData<>(0, message, data.size(), data.subList(beforeNum, Integer.min(beforeNum+limit, count)));
     }
 
     @RequestMapping(value = "/disconnect",method = RequestMethod.POST)

@@ -7,84 +7,94 @@
     <title>redissonPage</title>
 </head>
 <body>
-    <div th:include="index_nav :: navigators"></div>
-    <div class="layui-row">
-        <div class="layui-col-md6">
+<div th:include="index_nav :: navigators"></div>
+<div class="layui-row">
+    <div class="layui-col-md6">
         <fieldset class="layui-elem-field">
             <legend>连接信息</legend>
-            <div  class="layui-field-box">
-            <form class="layui-form" lay-filter="connect-info-from" style="margin-top: 12px">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">IP地址</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="host" required  lay-verify="required" placeholder="请输入IP地址" autocomplete="off" class="layui-input connect-info" value="localhost">
-                    </div>
-                    <label class="layui-form-label">端口号</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="port" required  lay-verify="required|number" placeholder="请输入端口号" autocomplete="off" class="layui-input connect-info" value="6379">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">数据库</label>
-                    <div class="layui-input-inline">
-                        <select class="connect-info" name="db" lay-verify="required" lay-search>
-                            <div th:each="db:${#numbers.sequence(0,63,1)}">
-                                <option th:text="${db}" th:if="${db} eq 3" th:attr="selected='selected'"></option>
-                                <option th:text="${db}" th:unless="${db} eq 3"></option>
-                            </div>
-                        </select>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">序列化</label>
+            <div class="layui-field-box">
+                <form class="layui-form" lay-filter="connect-info-from" style="margin-top: 12px">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">IP地址</label>
                         <div class="layui-input-inline">
-                            <select name="codec" class="connect-info">
-                                <option value="FstCodec" selected>FstCodec</option>
-                                <optgroup label="暂未实现">
-                                    <option value="JsonJacksonCodec">JsonJacksonCodec</option>
-                                    <option value="KryoCodec">KryoCodec</option>
-                                    <option value="SerializationCodec">SerializationCodec</option>
-                                    <option value="SnappyCodec">SnappyCodec</option>
-                                    <option value="StringCodec">StringCodec</option>
-                                </optgroup>
-                            </select>
+                            <input type="text" name="host" required lay-verify="required" placeholder="请输入IP地址"
+                                   autocomplete="off" class="layui-input connect-info" value="localhost">
+                        </div>
+                        <label class="layui-form-label">端口号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="port" required lay-verify="required|number" placeholder="请输入端口号"
+                                   autocomplete="off" class="layui-input connect-info" value="6379">
                         </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">密码框</label>
-                    <div class="layui-input-inline">
-                        <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input connect-info">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">数据库</label>
+                        <div class="layui-input-inline">
+                            <select class="connect-info" name="db" lay-verify="required" lay-search>
+                                <div th:each="db:${#numbers.sequence(0,63,1)}">
+                                    <option th:text="${db}" th:if="${db} eq 3" th:attr="selected='selected'"></option>
+                                    <option th:text="${db}" th:unless="${db} eq 3"></option>
+                                </div>
+                            </select>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">序列化</label>
+                            <div class="layui-input-inline">
+                                <select name="codec" class="connect-info">
+                                    <option value="FstCodec" selected>FstCodec</option>
+                                    <optgroup label="暂未实现">
+                                        <option value="JsonJacksonCodec">JsonJacksonCodec</option>
+                                        <option value="KryoCodec">KryoCodec</option>
+                                        <option value="SerializationCodec">SerializationCodec</option>
+                                        <option value="SnappyCodec">SnappyCodec</option>
+                                        <option value="StringCodec">StringCodec</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <button id="connect-info-reset" type="reset" class="layui-btn layui-btn-primary connect-info" style="margin-left: 123px">重置</button>
-                        <button id="connect-info-submit" class="layui-btn connect-info" lay-submit lay-filter="connect-info-submit">立即提交</button>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码框</label>
+                        <div class="layui-input-inline">
+                            <input type="password" name="password" placeholder="请输入密码" autocomplete="off"
+                                   class="layui-input connect-info">
+                        </div>
                     </div>
-                </div>
-            </form>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button id="connect-info-reset" type="reset"
+                                    class="layui-btn layui-btn-primary connect-info" style="margin-left: 123px">重置
+                            </button>
+                            <button id="connect-info-submit" class="layui-btn connect-info" lay-submit
+                                    lay-filter="connect-info-submit">立即提交
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </fieldset>
-        </div>
-        <div class="layui-col-md6">
+    </div>
+    <div class="layui-col-md6">
         <fieldset class="layui-elem-field">
             <legend>连接状态</legend>
             <form class="layui-form">
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <label for="connect-status"></label><input id="connect-status" type="checkbox" lay-skin="switch" lay-filter="connectStatusSwitch" lay-text="开启|关闭" disabled>
+                        <label for="connect-status"></label><input id="connect-status" type="checkbox" lay-skin="switch"
+                                                                   lay-filter="connectStatusSwitch" lay-text="开启|关闭"
+                                                                   disabled>
                     </div>
                 </div>
             </form>
         </fieldset>
-            <p id="return"></p>
+        <p id="return"></p>
         <fieldset class="layui-elem-field">
             <legend>查询请求</legend>
             <form class="layui-form">
                 <div class="layui-form-item">
                     <label class="layui-form-label">key: </label>
                     <div class="layui-input-block">
-                        <input id="query-info-key" type="text" name="key" required  lay-verify="required" placeholder="请输入 redis key" autocomplete="on" class="layui-input query-info" disabled>
+                        <input id="query-info-key" type="text" name="key" required lay-verify="required"
+                               placeholder="请输入 redis key" autocomplete="on" class="layui-input query-info" disabled>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -113,151 +123,160 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button id="query-info-reset" type="reset" class="layui-btn layui-btn-primary layui-btn-disabled query-info" disabled>重置</button>
-                        <button id="query-info-submit" class="layui-btn layui-btn-disabled query-info" lay-submit lay-filter="query-info-submit" disabled>立即提交</button>
+                        <button id="query-info-reset" type="reset"
+                                class="layui-btn layui-btn-primary layui-btn-disabled query-info" disabled>重置
+                        </button>
+                        <button id="query-info-submit" class="layui-btn layui-btn-disabled query-info" lay-submit
+                                lay-filter="query-info-submit" disabled>立即提交
+                        </button>
                     </div>
                 </div>
             </form>
         </fieldset>
-        </div>
-        <fieldset class="layui-elem-field">
-            <legend>查询结果</legend>
-            <table id="query-result-data" class="layui-table" lay-even lay-skin="nob"></table>
-        </fieldset>
     </div>
+    <fieldset class="layui-elem-field">
+        <legend>查询结果</legend>
+        <table id="query-result-data" class="layui-table" lay-even lay-skin="nob"></table>
+    </fieldset>
+</div>
 </body>
-    <script th:src="@{/layui-v2.4.5/layui.all.js}"></script>
-    <script th:inline="none">
-        ;!function(){
-            var element = layui.element,
-                $ = layui.$,
-                form = layui.form,
-                layer = layui.layer,
-                table = layui.table;
-            //连接监听提交
-            form.on('submit(connect-info-submit)', function(data){
-                var param=data.field;
-                console.log(JSON.stringify(param));
+<script th:src="@{/layui-v2.4.5/layui.all.js}"></script>
+<script th:inline="none">
+    ;!function () {
+        var element = layui.element,
+            $ = layui.$,
+            form = layui.form,
+            layer = layui.layer,
+            table = layui.table;
+        //连接监听提交
+        form.on('submit(connect-info-submit)', function (data) {
+            var param = data.field;
+            console.log(JSON.stringify(param));
+            $.ajax({
+                url: "/redission/connect",
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(param),
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        //禁用连接
+                        $('.connect-info').attr('disabled', true)
+                        $('#connect-info-reset').addClass('layui-btn-disabled')
+                        $('#connect-info-submit').addClass('layui-btn-disabled')
+                        $('#connect-status').attr("disabled", false).prop("checked", true)
+                        //查询可用开启
+                        $('.query-info').attr('disabled', false)
+                        $('#query-info-reset').removeClass('layui-btn-disabled')
+                        $('#query-info-submit').removeClass('layui-btn-disabled')
+                        //重新渲染
+                        form.render('select')
+                        form.render('checkbox')
+                    } else {
+                        layer.alert(res.msg, {
+                            title: "返回结果有点不正常"
+                        })
+                    }
+                },
+                error: function () {
+                    console.log('request error')
+                }
+            });
+            return false;
+        });
+        //查询监听提交
+        form.on('submit(query-info-submit)', function (data) {
+            var param = data.field;
+            console.log(JSON.stringify(param));
+            $.ajax({
+                url: "/redission/query",
+                type: 'post',
+                dataType: 'json',
+                data: JSON.stringify(param),
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        active(res.data.key, res.data.type)
+                    } else {
+                        layer.alert(res.msg, {
+                            title: "返回结果有点不正常"
+                        })
+                    }
+                },
+                error: function () {
+                    console.log('request error')
+                }
+            });
+            return false;
+        });
+        //连接状态按钮状态监听
+        form.on('switch(connectStatusSwitch)', function (data) {
+            if (data.elem.checked === false) {
                 $.ajax({
-                    url:"/redission/connect",
-                    type:'post',
-                    dataType:'json',
-                    data:JSON.stringify(param),
+                    url: "/redission/disconnect",
+                    type: 'post',
+                    dataType: 'json',
                     contentType: "application/json; charset=utf-8",
-                    success:function(res){
-                        if(res.code===200){
-                            //禁用连接
-                            $('.connect-info').attr('disabled', true)
-                            $('#connect-info-reset').addClass('layui-btn-disabled')
-                            $('#connect-info-submit').addClass('layui-btn-disabled')
-                            $('#connect-status').attr("disabled", false).prop("checked",true)
-                            //查询可用开启
-                            $('.query-info').attr('disabled', false)
-                            $('#query-info-reset').removeClass('layui-btn-disabled')
-                            $('#query-info-submit').removeClass('layui-btn-disabled')
+                    success: function (res) {
+                        if (res.code === 200) {
+                            //连接可用开启
+                            $('.connect-info').attr('disabled', false)
+                            $('#connect-info-submit').removeClass('layui-btn-disabled')
+                            $('#connect-info-reset').removeClass('layui-btn-disabled')
+                            $('#connect-status').prop("checked", false).attr("disabled", true)
+                            //查询禁用
+                            $('.query-info').attr('disabled', true)
+                            $('#query-info-reset').addClass('layui-btn-disabled')
+                            $('#query-info-submit').addClass('layui-btn-disabled')
                             //重新渲染
                             form.render('select')
                             form.render('checkbox')
-                        }else{
-                            layer.alert(res.msg,{
+                        } else {
+                            layer.alert(res.msg, {
                                 title: "返回结果有点不正常"
                             })
                         }
                     },
-                    error:function(){
+                    error: function () {
                         console.log('request error')
                     }
                 });
-                return false;
-            });
-            //查询监听提交
-            form.on('submit(query-info-submit)', function(data){
-                var param=data.field;
-                console.log(JSON.stringify(param));
-                $.ajax({
-                    url:"/redission/query",
-                    type:'post',
-                    dataType:'json',
-                    data:JSON.stringify(param),
-                    contentType: "application/json; charset=utf-8",
-                    success:function(res){
-                        if(res.code===200){
-                            active(res.data.key, res.data.type)
-                        }else{
-                            layer.alert(res.msg,{
-                                title: "返回结果有点不正常"
-                            })
-                        }
-                    },
-                    error:function(){
-                        console.log('request error')
-                    }
-                });
-                return false;
-            });
-            //连接状态按钮状态监听
-            form.on('switch(connectStatusSwitch)', function(data){
-                if(data.elem.checked === false){
-                    $.ajax({
-                        url:"/redission/disconnect",
-                        type:'post',
-                        dataType:'json',
-                        contentType: "application/json; charset=utf-8",
-                        success:function(res){
-                            if(res.code===200){
-                                //连接可用开启
-                                $('.connect-info').attr('disabled', false)
-                                $('#connect-info-submit').removeClass('layui-btn-disabled')
-                                $('#connect-info-reset').removeClass('layui-btn-disabled')
-                                $('#connect-status').prop("checked", false).attr("disabled",true)
-                                //查询禁用
-                                $('.query-info').attr('disabled', true)
-                                $('#query-info-reset').addClass('layui-btn-disabled')
-                                $('#query-info-submit').addClass('layui-btn-disabled')
-                                //重新渲染
-                                form.render('select')
-                                form.render('checkbox')
-                            }else{
-                                layer.alert(res.msg,{
-                                    title: "返回结果有点不正常"
-                                })
-                            }
-                        },
-                        error:function(){
-                            console.log('request error')
-                        }
-                    });
-                    return true;
-                }
-                return false;
-            });
+                return true;
+            }
+            return false;
+        });
 
-            active = function(key, type){
-                table.reload('query-result-data',{
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    },
-                    where:{
-                        key: key,
-                        type: type
-                    }
+        active = function (key, type) {
+            table.reload('query-result-data', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    key: key,
+                    type: type
+                }
+            })
+        };
+        table.render({
+            elem: '#query-result-data',
+            url: '/redission/data', //数据接口
+            id: 'query-result-data',
+            toolbar: true,
+            limits: [10, 15, 20, 50],
+            limit: 10, //每页默认显示的数量
+            page: true,
+            title: "查询结果",
+            cols: [[
+                {field: 'index', title: 'index', sort: true},
+                {field: 'value', title: 'value'},
+                {field: 'score', title: 'score', sort: true}
+            ]],
+            done: function (res, curr, count) {
+                layer.alert(res.msg, {
+                    title: "返回信息"
                 })
-            };
-            table.render({
-                elem: '#query-result-data',
-                url: '/redission/data', //数据接口
-                id: 'query-result-data',
-                toolbar: true,
-                limits: [10, 15, 20],
-                limit: 10, //每页默认显示的数量
-                page: true,
-                title: "查询结果",
-                cols: [[
-                    {field: 'index', title: 'index', sort: true},
-                    {field: 'value', title: 'value'},
-                    {field: 'score', title: 'score', sort: true}
-                ]]
-            });
-        }();
-    </script>
+            }
+        });
+    }();
+</script>
 </html>
