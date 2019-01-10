@@ -11,6 +11,7 @@ import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import sun.security.krb5.internal.crypto.EType;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -142,13 +143,12 @@ public class redissionController {
                 case "RScoredSortedSet":
                     RScoredSortedSet<Object> rScoredSortedSet = redissonClient.getScoredSortedSet(key);
                     count = rScoredSortedSet.size();
-                    Object[] rScoredSortedSetObjs = rScoredSortedSet.readAll().toArray();
-
-                    for (int i = 0; i < rScoredSortedSetObjs.length; i++) {
+                    Collection<Object> rScoredSortedSetObjs = rScoredSortedSet.readAll();
+                    for (Object o : rScoredSortedSetObjs){
                         data.add(
-                                new MyKeyValue(i,
-                                        rScoredSortedSetObjs[i].toString(),
-                                        rScoredSortedSet.getScore(rScoredSortedSetObjs[i])
+                                new MyKeyValue(index++,
+                                        o.toString(),
+                                        rScoredSortedSet.getScore(o)
                                 )
                         );
                     }
@@ -159,6 +159,7 @@ public class redissionController {
             }
         }catch (Exception e){
             message = "你难道不知道类型选错了吗？";
+            count = 0;
         }
         Integer beforeNum = (page - 1) * limit;
         return new ResponseData<>(0, message, data.size(), data.subList(beforeNum, Integer.min(beforeNum+limit, count)));

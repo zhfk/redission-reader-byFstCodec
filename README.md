@@ -1,5 +1,6 @@
 # redission-reader-byFstCodec
 redsssion 读取 redis，序列化库为FstCodec
+https://github.com/zhfk/redission-reader-byFstCodec.git
 
 # 目前功能
   - 序列化框架 FstCodec 

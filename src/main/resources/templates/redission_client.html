@@ -272,9 +272,11 @@
                 {field: 'score', title: 'score', sort: true}
             ]],
             done: function (res, curr, count) {
-                layer.alert(res.msg, {
-                    title: "返回信息"
-                })
+                if(res.msg !== 'Query succeed'){
+                    layer.alert(res.msg, {
+                        title: "返回信息"
+                    })
+                }
             }
         });
     }();
